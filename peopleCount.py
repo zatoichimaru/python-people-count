@@ -37,10 +37,11 @@ def execute():
     cam.set( 3,640 )
     cam.set( 4,480 )
 
-    for i in range( 0,19 ):
+    for i in range(0, 19):
         ( grabbed, frame ) = cam.read()
 
     while( cam.isOpened() ):
+
         ( grabbed, frame ) = cam.read()
         height = np.size( frame, 0 )
         width = np.size( frame, 1 )
@@ -63,8 +64,8 @@ def execute():
         coordinateLineInputY = int( ( height / 2 ) - offsetLineReference )
         coordinateExitLineY = int( ( height / 2 ) + offsetLineReference )
 
-        cv2.line(frame, ( 0,coordinateLineInputY) , ( width,coordinateLineInputY), ( 255, 0, 0 ), 2 )
-        cv2.line(frame, ( 0,coordinateExitLineY ), ( width,coordinateExitLineY), ( 0, 0, 255 ), 2 )
+        cv2.line(frame, ( 0, coordinateLineInputY ) , ( width, coordinateLineInputY ), ( 255, 0, 0 ), 2 )
+        cv2.line(frame, ( 0, coordinateExitLineY ), ( width, coordinateExitLineY ), ( 0, 0, 255 ), 2 )
 
         for contourValue in allContour:
             if cv2.contourArea( contourValue ) < areaOutlineMinimumLimit:
@@ -74,21 +75,19 @@ def execute():
 
             ( x, y, w, h ) = cv2.boundingRect( contourValue )
 
-            coordinateContourCenterX = ( x + x + w ) / 2
-            coordinateContourCenterY = ( y + y + h ) / 2
-            centerPointOutline = ( int( coordinateContourCenterX ), int( coordinateContourCenterY ) )
-  
+            coordinateContourCenterX = int( ( x + x + w ) / 2 )
+            coordinateContourCenterY = int( ( y + y + h ) / 2 )
+            centerPointOutline = ( coordinateContourCenterX, coordinateContourCenterY )
+
             if ( foreheadIntersection( coordinateContourCenterY, coordinateLineInputY, coordinateExitLineY ) ):
                 counterEntries += 1
 
             if ( foreheadIntersectionExit( coordinateContourCenterY, coordinateLineInputY, coordinateExitLineY ) ):  
                 exitsCounter += 1
 
-        #print("Contornos encontrados: "+str(amountContours))
-
-        cv2.putText( frame, "Entradas1: {}" . format( str( counterEntries ) ), ( 10, 50 ),
+        cv2.putText( frame, "Entradas2: {}" . format( str( counterEntries ) ), ( 10, 50 ),
         cv2.FONT_HERSHEY_SIMPLEX, 0.5, ( 250, 0, 1 ), 1, cv2.LINE_AA )
-        cv2.putText( frame, "Entradas2: {}" . format( str( exitsCounter ) ), ( 10, 70 ),
+        cv2.putText( frame, "Entradas1: {}" . format( str( exitsCounter ) ), ( 10, 70 ),
         cv2.FONT_HERSHEY_SIMPLEX, 0.5, ( 0, 0, 255 ), 1, cv2.LINE_AA )
         cv2.imshow( "Original", frame )
         cv2.waitKey( 1 )
